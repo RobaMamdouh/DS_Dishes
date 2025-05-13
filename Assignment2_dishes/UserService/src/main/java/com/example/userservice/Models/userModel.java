@@ -6,7 +6,6 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "users")
 public class userModel
 {
     @Id
