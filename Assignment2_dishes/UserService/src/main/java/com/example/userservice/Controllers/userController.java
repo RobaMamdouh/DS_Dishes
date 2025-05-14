@@ -24,18 +24,18 @@ public class userController {
     }
 
     @PostMapping("/login")
-    public String loginUser(@RequestBody userModel user) {
+    public String loginUser(@RequestParam String username, @RequestParam String password) {
         try {
-            userService.loginUser(user.getUsername(), user.getPassword());
+            userService.loginUser(username, password);
             return "Login successful";
         } catch (Exception e) {
             return "Error: " + e.getMessage();
         }
     }
     @PostMapping("/createCompany")
-    public String createCompany(@RequestBody userModel user) {
+    public String createCompany(@RequestParam String username) {
         try {
-            userService.createCompany(user.getUsername());
+            userService.createCompany(username);
             return "Company created successfully";
         } catch (Exception e) {
             return "Error: " + e.getMessage();
@@ -45,6 +45,11 @@ public class userController {
     @GetMapping("/allUsers")
     public List<userModel> getAllUsers() {
         return userService.getAllUsers();
+    }
+
+    @GetMapping("/userById")
+    public userModel getUserById(@RequestParam long userId) {
+        return userService.getUserById(userId);
     }
 
     @GetMapping("/allCompanies")

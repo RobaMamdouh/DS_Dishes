@@ -20,6 +20,7 @@ public class userService {
             throw new RuntimeException("User already exists");
         }
         userRepo.save(user);
+        System.out.println("User registered successfully: " + user.getUsername() + ", Password: " + user.getPassword());
     }
 
     public void loginUser(String username, String password) {
@@ -59,6 +60,10 @@ public class userService {
         return userRepo.findAll().stream()
                 .filter(user -> user.getRole() == roles.USER)
                 .toList();
+    }
+
+    public userModel getUserById(long id) {
+        return userRepo.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     public List<userModel> getAllCompanies() {

@@ -5,7 +5,9 @@ import com.example.orderservice.Repo.orderRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.orderservice.Models.orderModel;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,17 +16,8 @@ public class orderService {
     @Autowired
     private orderRepo orderRepo;
 
-//    public void createOrder(long orderId, long userId) {
-//        if (orderRepo.existsByOrderId(String.valueOf(orderId))) {
-//            throw new RuntimeException("Order with ID " + orderId + " already exists.");
-//        }
-//        orderModel newOrder = new orderModel();
-//        newOrder.setOrderId(orderId);
-//        newOrder.setUserId(userId);
-//        newOrder.setOrderStatus(status.PENDING);
-//
-//        orderRepo.save(newOrder);
-//    }
+    private RestTemplate restTemplate = new RestTemplate();
+
 
     public List<orderModel> getAllPastOrders(long userId) {
         return orderRepo.findAll().stream()

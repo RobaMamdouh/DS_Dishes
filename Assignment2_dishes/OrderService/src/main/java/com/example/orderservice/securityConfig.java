@@ -1,4 +1,4 @@
-package com.example.userservice;
+package com.example.orderservice;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,8 +14,7 @@ public class securityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // Disable CSRF protection
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/users/register", "/api/users/login" ,"/api/users/userById" , "/api/users/createCompany"
-                        ,"api/users/allUsers" , "/api/users/allCompanies").permitAll()
+                        .requestMatchers("/api/orders/allPendingOrders").permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults()); // Enable HTTP Basic Auth
