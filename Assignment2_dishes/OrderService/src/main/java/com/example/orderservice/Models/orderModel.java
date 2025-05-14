@@ -16,7 +16,7 @@ public class orderModel {
     private long userId;
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "orderId")
-    private List<dishesModel> dishesId;
+    private List<dishesModel> dishes;
     private double totalPrice;
     @Enumerated(EnumType.STRING)
     private status orderStatus;
@@ -34,8 +34,8 @@ public class orderModel {
         return userId;
     }
 
-    public List<dishesModel> getDishesId() {
-        return dishesId;
+    public List<dishesModel> getDishes() {
+        return dishes;
     }
 
     public double getTotalPrice() {
@@ -54,8 +54,8 @@ public class orderModel {
         this.userId = userId;
     }
 
-    public void setDishesId(List<dishesModel> dishesId) {
-        this.dishesId = dishesId;
+    public void setDishesId(List<dishesModel> dishes) {
+        this.dishes = dishes;
     }
 
     public void setTotalPrice(double totalPrice) {

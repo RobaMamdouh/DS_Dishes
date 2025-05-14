@@ -1,5 +1,7 @@
 package com.example.orderservice.Services;
 
+import com.example.orderservice.DTO.CreateOrderRequest;
+import com.example.orderservice.Models.dishesModel;
 import com.example.orderservice.Models.status;
 import com.example.orderservice.Repo.orderRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,8 +9,10 @@ import org.springframework.stereotype.Service;
 import com.example.orderservice.Models.orderModel;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,6 +22,50 @@ public class orderService {
 
     private RestTemplate restTemplate = new RestTemplate();
 
+    private final String DISH_SERVICE_URL = "http://localhost:8082/dishes/"; // adjust URL as needed
+
+    public orderModel createOrder(CreateOrderRequest request) {
+        List<dishesModel> dishList = new ArrayList<>();
+        double totalPrice = 0;
+        double MINIMUM_ORDER_AMOUNT = 50.0;
+
+        for (Map.Entry<Long, Integer> entry : request.getDishIdQuantityMap().entrySet()) {
+            Long dishId = entry.getKey();
+            int quantity = entry.getValue();
+
+            try {
+                String url = DISH_SERVICE_URL + dishId;
+                dishesModel fetchedDish = restTemplate.getForObject(url, dishesModel.class);
+
+                if (fetchedDish != null) {
+                    dishesModel dish = new dishesModel();
+                    dish.setDishName(fetchedDish.getDishName());
+                    dish.setQuantity(quantity);
+                    dish.setPrice(fetchedDish.getPrice() * quantity);
+                    totalPrice += dish.getPrice();
+                    dishList.add(dish);
+                }
+            } catch (Exception ex) {
+                // Skip unavailable dish or log warning
+            }
+        }
+
+        if (dishList.isEmpty()) {
+            throw new RuntimeException("No available dishes found.");
+        }
+
+        if (totalPrice < MINIMUM_ORDER_AMOUNT) {
+            throw new RuntimeException("Minimum order amount must be $" + MINIMUM_ORDER_AMOUNT);
+        }
+
+        orderModel order = new orderModel();
+        order.setUserId(request.getUserId());
+        order.setDishesId(dishList);
+        order.setTotalPrice(totalPrice);
+        order.setOrderStatus(status.PENDING);
+
+        return orderRepo.save(order);
+    }
 
     public List<orderModel> getAllPastOrders(long userId) {
         return orderRepo.findAll().stream()
