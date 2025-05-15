@@ -1,4 +1,4 @@
-package com.example.dishesservice;
+package com.dishes.dishes_service;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;

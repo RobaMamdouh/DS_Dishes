@@ -1,4 +1,4 @@
-package com.example.dishesservice.Models;
+package com.dishes.dishes_service.Models;
 
 import jakarta.persistence.*;
 
@@ -20,7 +20,6 @@ public class DishesModel {
     public DishesModel() {
 
     }
-
 
     public DishesModel(String name, int quantity, double price) {
         this.name = name;

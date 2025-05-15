@@ -1,8 +1,7 @@
-package com.example.dishesservice.Controllers;
+package com.dishes.dishes_service.Controllers;
 
-
-import com.example.dishesservice.Models.DishesModel;
-import com.example.dishesservice.Services.DishesService;
+import com.dishes.dishes_service.Models.DishesModel;
+import com.dishes.dishes_service.Services.DishesService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
@@ -39,5 +38,11 @@ public class DishesController {
     public Response updateDish(@PathParam("id") Long id, DishesModel dish) {
         dishesService.updateDish(id, dish);
         return Response.ok().build();
+    }
+
+    @GET
+    @Path("/{id}")
+    public DishesModel getDishById(@PathParam("id") Long id) {
+        return dishesService.getDishById(id);
     }
 }

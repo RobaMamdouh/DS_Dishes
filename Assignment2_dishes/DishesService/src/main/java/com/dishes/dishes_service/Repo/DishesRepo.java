@@ -1,6 +1,6 @@
-package com.example.dishesservice.Repo;
+package com.dishes.dishes_service.Repo;
 
-import com.example.dishesservice.Models.DishesModel;
+import com.dishes.dishes_service.Models.DishesModel;
 import jakarta.ejb.Singleton;
 import jakarta.persistence.*;
 
@@ -13,11 +13,15 @@ public class DishesRepo {
     private EntityManager em;
 
     public List<DishesModel> getAllDishes() {
-        return em.createQuery("SELECT d FROM DishesModel d WHERE d.sold = false", DishesModel.class).getResultList();
+        return em.createQuery("SELECT d FROM DishesModel d ", DishesModel.class).getResultList();
     }
 
     public List<DishesModel> getSoldDishes() {
         return em.createQuery("SELECT d FROM DishesModel d WHERE d.sold = true", DishesModel.class).getResultList();
+    }
+
+    public DishesModel getDishById(Long id) {
+        return em.find(DishesModel.class, id);
     }
 
     public void addDish(DishesModel dish) {
