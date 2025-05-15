@@ -23,7 +23,34 @@ public class userService {
         System.out.println("User registered successfully: " + user.getUsername() + ", Password: " + user.getPassword());
     }
 
-    public void loginUser(String username, String password) {
+//    public void loginAdmin(String username, String password) {
+//        userModel user = validateUser(username, password);
+//        if (user.getRole() != roles.ADMIN) {
+//            throw new RuntimeException("Not an admin account");
+//        }
+//    }
+//
+//    public void loginCompany(String username, String password) {
+//        userModel user = validateUser(username, password);
+//        if (user.getRole() != roles.COMPANY) {
+//            throw new RuntimeException("Not a company account");
+//        }
+//    }
+//
+//    public void loginUser(String username, String password) {
+//        userModel user = validateUser(username, password);
+//        if (user.getRole() != roles.USER) {
+//            throw new RuntimeException("Not a regular user account");
+//        }
+//    }
+
+    public roles login(String username, String password) {
+        userModel user = validateUser(username, password);
+        return user.getRole();
+    }
+
+
+    private userModel validateUser(String username, String password) {
         userModel user = userRepo.findByUsername(username);
         if (user == null) {
             throw new RuntimeException("User not found");
@@ -31,6 +58,7 @@ public class userService {
         if (!user.getPassword().equals(password)) {
             throw new RuntimeException("Invalid password");
         }
+        return user;
     }
 
     private String generatePassword(int length) {
