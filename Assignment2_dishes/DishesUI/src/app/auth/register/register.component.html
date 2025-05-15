@@ -1,0 +1,32 @@
+<section class="landing-content">
+  <div class="landing-logo">
+    <img src="assets/logo.png" alt="HomeDine Logo"/>
+  </div>
+<div class="registration-container">
+  <div class="container">
+    <h2>Register</h2>
+
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" [(ngModel)]="username" name="username" required />
+        <div *ngIf="errorMessages.username" class="error-message">{{ errorMessages.username }}</div>
+      </div>
+
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" [(ngModel)]="password" name="password" required />
+        <div *ngIf="errorMessages.password" class="error-message">{{ errorMessages.password }}</div>
+      </div>
+
+      <a routerLink="/login">Already have an account? Login</a>
+
+      <button type="submit">Register</button>
+
+      <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+      <div *ngIf="errorMessages.general" class="error-message">{{ errorMessages.general }}</div>
+    </form>
+  </div>
+</div>
+</section>
