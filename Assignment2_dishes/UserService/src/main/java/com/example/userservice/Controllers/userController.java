@@ -97,4 +97,9 @@ public class userController {
     public List<userModel> getAllCompanies() {
         return userService.getAllCompanies();
     }
+
+        @GetMapping("/getUsernameById")
+    public String getUsernameById(@RequestParam long userId) {
+        return userService.getUsernameById(userId);
+    }
 }

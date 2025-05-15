@@ -99,4 +99,9 @@ public class userService {
                 .filter(user -> user.getRole() == roles.COMPANY)
                 .toList();
     }
+
+    public String getUsernameById(long id) {
+        userModel user = userRepo.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        return user.getUsername();
+    }
 }

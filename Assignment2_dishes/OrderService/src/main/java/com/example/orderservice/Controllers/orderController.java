@@ -5,6 +5,7 @@ import com.example.orderservice.Models.orderModel;
 import com.example.orderservice.Services.orderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.stream.Collectors;
 
@@ -36,6 +37,18 @@ public class orderController {
                 .stream()
                 .map(order -> "Order ID: " + order.getOrderId() + ", User ID: " + order.getUserId() + ", Status: " + order.getOrderStatus() + ", Total Price: " + order.getTotalPrice() +
                         ", Dishes: " + order.getDishes().stream().map(dish -> dish.getDishName() + " (x" + dish.getQuantity() + ")").collect(Collectors.joining(", ")))
+                .collect(Collectors.joining(", "));
+    }
+
+    private final String USER_SERVICE_URL = "http://localhost:8080/api/users/getUsernameById?userId=";
+    private RestTemplate restTemplate = new RestTemplate();
+
+    @GetMapping("/alldishes")
+    public String getAllDishes() {
+        return orderService.getAllDishes()
+                .stream()
+                .map(dish -> "Dish ID: " + dish.getId() + ", Dish Name: " + dish.getDishName() + ", Price: " + dish.getPrice() + ", Quantity: " + dish.getQuantity() +
+                        ", User Info: " + restTemplate.getForObject(USER_SERVICE_URL + dish.getUserId(), String.class))
                 .collect(Collectors.joining(", "));
     }
 }

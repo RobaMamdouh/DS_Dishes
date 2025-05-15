@@ -14,7 +14,7 @@ public class securityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // Disable CSRF protection
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/orders/allPendingOrders" ,"/api/orders/allPastOrders" , "/api/orders/createOrder").permitAll()
+                        .requestMatchers("/api/orders/allPendingOrders" ,"/api/orders/allPastOrders" , "/api/orders/createOrder" , "/api/orders/alldishes").permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults()); // Enable HTTP Basic Auth

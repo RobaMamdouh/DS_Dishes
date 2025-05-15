@@ -28,6 +28,16 @@ public class userModel
 
     private String username;
     private String password;
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
+    private double balance;
     @Enumerated(EnumType.STRING)
     private roles role;
 

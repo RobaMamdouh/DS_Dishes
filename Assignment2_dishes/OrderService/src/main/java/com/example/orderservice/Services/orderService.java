@@ -3,6 +3,7 @@ package com.example.orderservice.Services;
 import com.example.orderservice.DTO.CreateOrderRequest;
 import com.example.orderservice.Models.dishesModel;
 import com.example.orderservice.Models.status;
+import com.example.orderservice.Repo.DishesRepo;
 import com.example.orderservice.Repo.orderRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,9 @@ public class orderService {
     @Autowired
     private orderRepo orderRepo;
 
+    @Autowired
+    private DishesRepo dishesRepo;
+
     private RestTemplate restTemplate = new RestTemplate();
 
     private final String DISH_SERVICE_URL = "http://localhost:8081/DishesService-1.0-SNAPSHOT/api/dishes/";
@@ -38,13 +42,13 @@ public class orderService {
             try {
                 String url = DISH_SERVICE_URL + dishId;
                 dishesModel fetchedDish = restTemplate.getForObject(url, dishesModel.class);
-                System.out.println(fetchedDish.getDishName() + " " + fetchedDish.getPrice() + " " + fetchedDish.getQuantity() + " " + quantity);
 
                 if (fetchedDish != null) {
                     dishesModel dish = new dishesModel();
                     dish.setDishName(fetchedDish.getDishName());
                     dish.setQuantity(quantity);
                     dish.setPrice(fetchedDish.getPrice() * quantity);
+                    dish.setUserId(request.getUserId());
                     totalPrice += dish.getPrice();
                     dishList.add(dish);
                 }
@@ -81,6 +85,9 @@ public class orderService {
         return orderRepo.findAll().stream()
                 .filter(order -> order.getUserId() == userId && order.getOrderStatus() == status.PENDING)
                 .collect(Collectors.toList());
+    }
+    public List<dishesModel> getAllDishes() {
+        return dishesRepo.findAll();
     }
 
 }
