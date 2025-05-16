@@ -3,17 +3,24 @@ package com.example.userservice.Services;
 import com.example.userservice.Models.roles;
 import com.example.userservice.Models.userModel;
 import com.example.userservice.Repo.userRepo;
+import org.springframework.amqp.rabbit.annotation.Exchange;
+import org.springframework.amqp.rabbit.annotation.Queue;
+import org.springframework.amqp.rabbit.annotation.QueueBinding;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 @Service
 public class userService {
     @Autowired
     private userRepo userRepo;
+
 
     public void registerUser(userModel user) {
         if (userRepo.existsByUsername(user.getUsername())) {
@@ -125,5 +132,43 @@ public class userService {
         return true;
     }
 
+    public double getBalance(long userId) {
+        userModel user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        return user.getBalance();
+    }
+
+
+    private final List<String> paymentFailedMessages = new ArrayList<>();
+    private final List<String> errorLogMessages = new ArrayList<>();
+
+    @RabbitListener(bindings = @QueueBinding(
+            value = @Queue(value = "admin.payment.failed", durable = "true"),
+            exchange = @Exchange(value = "payments", type = "direct"),
+            key = "PaymentFailed"
+    ))
+    public void handlePaymentFailed(String message) {
+        String logMessage = "Admin Alert: " + message;
+        System.out.println(logMessage);
+        paymentFailedMessages.add(logMessage);
+    }
+
+    @RabbitListener(bindings = @QueueBinding(
+            value = @Queue(value = "admin.error.logs", durable = "true"),
+            exchange = @Exchange(value = "log", type = "topic"),
+            key = "*.ERROR"
+    ))
+    public void handleErrorLogs(String message) {
+        String logMessage = "Admin Log Alert: " + message;
+        System.out.println(logMessage);
+        errorLogMessages.add(logMessage);
+    }
+
+    public List<String> getPaymentFailedMessages() {
+        return paymentFailedMessages;
+    }
+
+    public List<String> getErrorLogMessages() {
+        return errorLogMessages;
+    }
 
 }

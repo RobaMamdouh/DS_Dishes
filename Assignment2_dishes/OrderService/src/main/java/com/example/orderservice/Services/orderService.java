@@ -7,6 +7,7 @@ import com.example.orderservice.Models.dishesModel;
 import com.example.orderservice.Models.status;
 import com.example.orderservice.Repo.DishesRepo;
 import com.example.orderservice.Repo.orderRepo;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -26,56 +27,26 @@ public class orderService {
 
     private RestTemplate restTemplate = new RestTemplate();
 
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
     private final String DISH_SERVICE_URL = "http://localhost:8081/DishesService-1.0-SNAPSHOT/api/dishes/";
 
-//    public orderModel createOrder(CreateOrderRequest request) {
-//        List<dishesModel> dishList = new ArrayList<>();
-//        double totalPrice = 0;
-//        double MINIMUM_ORDER_AMOUNT = 50.0;
-//
-//        for (Map.Entry<Long, Integer> entry : request.getDishIdQuantityMap().entrySet()) {
-//            Long dishId = entry.getKey();
-//            int quantity = entry.getValue();
-//
-//            try {
-//                String url = DISH_SERVICE_URL + dishId;
-//                dishesModel fetchedDish = restTemplate.getForObject(url, dishesModel.class);
-//
-//                if(quantity > fetchedDish.getQuantity()) {
-//                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Requested quantity exceeds available stock for dish ID: " + dishId);
-//                }
-//
-//                if (fetchedDish != null) {
-//                    dishesModel dish = new dishesModel();
-//                    dish.setDishName(fetchedDish.getDishName());
-//                    dish.setQuantity(quantity);
-//                    dish.setPrice(fetchedDish.getPrice() * quantity);
-//                    dish.setUserId(request.getUserId());
-//                    totalPrice += dish.getPrice();
-//                    dishList.add(dish);
-//                }
-//            } catch (Exception ex) {
-//                System.out.println("Error fetching dish with ID " + dishId + ": " + ex.getMessage());
-//            }
-//        }
-//
-//        if (dishList.isEmpty()) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "None of the selected dishes are available or in stock.");
-//        }
-//
-//
-//        if (totalPrice < MINIMUM_ORDER_AMOUNT) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Minimum order amount must be: " + MINIMUM_ORDER_AMOUNT);
-//        }
-//
-//        orderModel order = new orderModel();
-//        order.setUserId(request.getUserId());
-//        order.setDishesId(dishList);
-//        order.setTotalPrice(totalPrice);
-//        order.setOrderStatus(status.COMPLETED);
-//
-//        return orderRepo.save(order);
-//    }
+
+    public void publishPaymentFailedEvent(long userId, double amount) {
+        String message = "Payment failed for user ID: " + userId + ", Amount: " + amount;
+        rabbitTemplate.convertAndSend("payments", "PaymentFailed", message);
+    }
+
+    public void logEvent(String serviceName, String severity, String message) {
+        String routingKey = serviceName + "." + severity;
+        try {
+            rabbitTemplate.convertAndSend("log", routingKey, message);
+            System.out.println("Sent log event with routing key: " + routingKey);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public ResponseEntity<?> createOrder(CreateOrderRequest request) {
         List<dishesModel> dishList = new ArrayList<>();
@@ -97,6 +68,7 @@ public class orderService {
                     if (quantity > fetchedDish.getQuantity()) {
                         shouldCancel = true;
                         cancelReason = "Requested quantity exceeds available stock for dish ID: " + dishId;
+                        logEvent("OrderService", "ERROR", cancelReason);
                         continue;
                     }
 
@@ -110,19 +82,33 @@ public class orderService {
                     reduceDishesList.add(new ReduceDishesDTO(dishId, quantity));
                 }
             } catch (Exception ex) {
-                System.out.println("Error fetching dish with ID " + dishId + ": " + ex.getMessage());
+                String errorMessage = "Error fetching dish with ID " + dishId + ": " + ex.getMessage();
+                logEvent("OrderService", "ERROR", errorMessage);
             }
         }
 
         if (dishList.isEmpty()) {
             shouldCancel = true;
             cancelReason = "None of the selected dishes are available or in stock.";
+            logEvent("OrderService", "ERROR", cancelReason);
         }
 
         if (totalPrice < MINIMUM_ORDER_AMOUNT) {
             shouldCancel = true;
             cancelReason = "Minimum order amount must be: " + MINIMUM_ORDER_AMOUNT;
+            logEvent("OrderService", "ERROR", cancelReason);
         }
+
+        String balanceURL = "http://localhost:8082/api/users/getBalance?userId=" + request.getUserId();
+        ResponseEntity<Double> getBalance = restTemplate.getForEntity(balanceURL, Double.class);
+        // check if the balance is less than the total return log the error and payment failure
+        if (getBalance.getBody() < totalPrice) {
+            shouldCancel = true;
+            cancelReason = "Insufficient balance.";
+            logEvent("OrderService", "ERROR", cancelReason);
+            publishPaymentFailedEvent(request.getUserId(), totalPrice);
+        }
+
 
         orderModel order = new orderModel();
         order.setUserId(request.getUserId());
@@ -134,34 +120,38 @@ public class orderService {
             Map<String, Object> response = new HashMap<>();
             response.put("status", "CANCELLED");
             response.put("message", "Order cancelled due to: " + cancelReason);
+            logEvent("OrderService", "INFO", "Order cancelled for user ID: " + request.getUserId());
             return ResponseEntity.badRequest().body(response);
         } else {
             order.setDishesId(dishList);
             order.setTotalPrice(totalPrice);
             order.setOrderStatus(status.COMPLETED);
             orderModel savedOrder = orderRepo.save(order);
+            logEvent("OrderService", "INFO", "Order created successfully for user ID: " + request.getUserId());
+
             try {
                 String reduceStockUrl = DISH_SERVICE_URL + "/reduce-stock";
                 ResponseEntity<String> reduceResponse = restTemplate.postForEntity(reduceStockUrl, reduceDishesList, String.class);
 
                 if (!reduceResponse.getStatusCode().is2xxSuccessful()) {
-                    System.out.println("Warning: Stock reduction failed in dishes service.");
+                    logEvent("OrderService", "WARNING", "Stock reduction failed in dishes service.");
                 }
             } catch (Exception e) {
-                System.out.println("Error reducing dish stock: " + e.getMessage());
+                logEvent("OrderService", "ERROR", "Error reducing dish stock: " + e.getMessage());
             }
+
             try {
                 String reduceBalanceUrl = "http://localhost:8082/api/users/reduce-balance?userId="
                         + request.getUserId() + "&amount=" + totalPrice;
 
-
                 ResponseEntity<String> balanceResponse = restTemplate.postForEntity(reduceBalanceUrl, null, String.class);
 
                 if (!balanceResponse.getStatusCode().is2xxSuccessful()) {
-                    System.out.println("Balance deduction failed. Optionally trigger compensation here.");
+                    publishPaymentFailedEvent(request.getUserId(), totalPrice);
+                    logEvent("OrderService", "ERROR", "Balance deduction failed for user ID: " + request.getUserId());
                 }
             } catch (Exception e) {
-                System.out.println("Error reducing user balance: " + e.getMessage());
+                logEvent("OrderService", "ERROR", "Error reducing user balance: " + e.getMessage());
             }
 
             return ResponseEntity.ok(savedOrder);
