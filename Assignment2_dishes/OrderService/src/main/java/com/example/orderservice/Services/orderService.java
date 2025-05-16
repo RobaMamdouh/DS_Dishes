@@ -173,5 +173,37 @@ public class orderService {
         return dishesRepo.findAll();
     }
 
+    public List<SoldDishInfo> getSoldDishesWithUsernames() {
+        List<orderModel> completedOrders = orderRepo.findAll().stream()
+                .filter(order -> order.getOrderStatus() == status.COMPLETED)
+                .toList();
+
+        List<SoldDishInfo> result = new ArrayList<>();
+
+        for (orderModel order : completedOrders) {
+            String username = fetchUsernameByUserId(order.getUserId());
+            for (dishesModel dish : order.getDishes()) {
+                result.add(new SoldDishInfo(
+                        dish.getDishName(),
+                        dish.getQuantity(),
+                        dish.getPrice(),
+                        username
+                ));
+            }
+        }
+
+        return result;
+    }
+
+    private String fetchUsernameByUserId(long userId) {
+        try {
+            String url = "http://localhost:8082/users/" + userId; // Adjust if needed
+            Map response = restTemplate.getForObject(url, Map.class);
+            return response != null && response.get("username") != null ? response.get("username").toString() : "Unknown";
+        } catch (Exception e) {
+            return "Unknown";
+        }
+    }
+
 
 }
