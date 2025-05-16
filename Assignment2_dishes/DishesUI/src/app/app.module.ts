@@ -22,6 +22,8 @@ import { OrderListComponent } from './user/order-list/order-list.component';
 import { ShoppingCartComponent } from './user/shopping-cart/shopping-cart.component';
 import { OrderDetailComponent } from './user/order-detail/order-detail.component';
 import { SoldDishDetailComponent } from './company/sold-dish-detail/sold-dish-detail.component';
+import { PaymentComponent } from './admin/payment/payment.component';
+import { LogsComponent } from './admin/logs/logs.component';
 
 
 
@@ -46,6 +48,8 @@ import { SoldDishDetailComponent } from './company/sold-dish-detail/sold-dish-de
     ShoppingCartComponent,
     OrderDetailComponent,
     SoldDishDetailComponent,
+    PaymentComponent,
+    LogsComponent,
   ],
   imports: [
     BrowserModule,

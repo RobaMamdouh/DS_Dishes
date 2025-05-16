@@ -1,0 +1,22 @@
+<div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+<div class="logs-container">
+  <h2>Error Logs</h2>
+  <table *ngIf="logs && logs.length > 0; else noLogs">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Log Message</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let log of logs; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ log }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <ng-template #noLogs>
+    <p>No error logs found.</p>
+  </ng-template>
+</div>
+<div *ngIf="!errorMessage && logs.length === 0">No logs found.</div>

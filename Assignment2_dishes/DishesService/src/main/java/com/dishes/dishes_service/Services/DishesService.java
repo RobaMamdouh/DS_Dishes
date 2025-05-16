@@ -47,10 +47,22 @@ public class DishesService {
         return ExternalOrderClient.fetchSoldDishes(sellerId);
     }
 
-
-
     public List<DishesModel> getDishesBySellerId(Long sellerId) {
         return dishesRepo.getDishesBySellerId(sellerId);
+    }
+
+    public void reduceQuantity(List<com.dishes.dishes_service.Models.ReduceDishesDTO> reduceDishesList) {
+        for (com.dishes.dishes_service.Models.ReduceDishesDTO dto : reduceDishesList) {
+            DishesModel dish = getDishById(dto.getDishId());
+            if (dish == null) {
+                throw new EntityNotFoundException("Dish with ID " + dto.getDishId() + " not found.");
+            }
+            if (dish.getQuantity() < dto.getQuantity()) {
+                throw new IllegalArgumentException("Not enough stock for dish ID " + dto.getDishId());
+            }
+            dish.setQuantity(dish.getQuantity() - dto.getQuantity());
+            updateDish(dish.getId(), dish);
+        }
     }
 
 }

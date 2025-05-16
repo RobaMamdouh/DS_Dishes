@@ -18,7 +18,8 @@ import { CreateOrderComponent } from './user/create-order/create-order.component
 import { OrderListComponent } from './user/order-list/order-list.component';
 import { ShoppingCartComponent } from './user/shopping-cart/shopping-cart.component';
 import { OrderDetailComponent } from './user/order-detail/order-detail.component';
-import { DishDetailComponent } from './user/dish-detail/dish-detail.component';
+import { PaymentComponent } from './admin/payment/payment.component';
+import { LogsComponent } from './admin/logs/logs.component';
 
 
 
@@ -41,7 +42,8 @@ const routes: Routes = [
   { path: 'order-list', component: OrderListComponent },
   { path: 'shopping-cart', component: ShoppingCartComponent },
   { path: 'order-detail/:id', component: OrderDetailComponent },
-  { path: 'dish-detail/:id', component: DishDetailComponent },
+  { path: 'view-payment', component: PaymentComponent },
+  { path: 'view-logs', component: LogsComponent },
   { path: '', redirectTo: '/landingpage', pathMatch: 'full' },
 ];
 

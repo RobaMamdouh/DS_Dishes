@@ -38,37 +38,38 @@ export class ShoppingCartComponent implements OnInit {
     this.total = 0;
   }
 
-checkout(): void {
-  if (this.cart.length === 0) {
-    this.errorMessage = 'Your cart is empty.';
-    this.successMessage = '';
-    return;
-  }
-
-  const userId = this.authService.getUserId();
-  if (!userId) {
-    this.errorMessage = 'User not logged in.';
-    this.successMessage = '';
-    return;
-  }
-
-  const dishIdQuantityMap: { [key: number]: number } = {};
-  this.cart.forEach(item => {
-    dishIdQuantityMap[item.id] = item.quantity;
-  });
-
-  this.userService.createOrder(userId, dishIdQuantityMap).subscribe({
-    next: () => {
-      this.successMessage = 'Order placed successfully!';
-      this.errorMessage = '';
-      this.clearCart();
-      setTimeout(() => this.router.navigate(['/user-home']), 2000);
-    },
-    error: (err) => {
-      this.errorMessage = err.error?.message || 'Order failed. Please try again.';
+  checkout(): void {
+    if (this.cart.length === 0) {
+      this.errorMessage = 'Your cart is empty.';
       this.successMessage = '';
+      return;
     }
-  });
-}
+
+    const userId = this.authService.getUserId();
+    if (!userId) {
+      this.errorMessage = 'User not logged in.';
+      this.successMessage = '';
+      return;
+    }
+
+    const dishIdQuantityMap: { [key: number]: number } = {};
+    this.cart.forEach(item => {
+      dishIdQuantityMap[item.id] = item.quantity;
+    });
+
+    this.userService.createOrder(userId, dishIdQuantityMap).subscribe({
+      next: () => {
+        this.successMessage = 'Order placed successfully!';
+        this.errorMessage = '';
+        this.clearCart();
+        setTimeout(() => this.router.navigate(['/user-home']), 2000);
+      },
+      error: (err) => {
+        // Show backend error message for out of stock or insufficient charge
+        this.errorMessage = err.error?.message || err.error || 'Order failed. Please try again.';
+        this.successMessage = '';
+      }
+    });
+  }
 
 }

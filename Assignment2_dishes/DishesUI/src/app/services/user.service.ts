@@ -21,17 +21,23 @@ export class UserService {
   }
 
   createOrder(userId: number, dishIdQuantityMap: { [key: number]: number }): Observable<any> {
+    const stringKeyMap: { [key: string]: number } = {};
+    Object.keys(dishIdQuantityMap).forEach((k: string) => {
+      stringKeyMap[k] = (dishIdQuantityMap as any)[k];
+    });
     const payload = {
       userId: userId,
-      dishIdQuantityMap: dishIdQuantityMap
+      dishIdQuantityMap: stringKeyMap
     };
     return this.http.post(`${this.Order_API_BASE}/createOrder`, payload);
   }
 
-  getOrdersByUserId(userId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.Order_API_BASE}/user/${userId}`);
+  getAllPastOrders(userId: number): Observable<string> {
+    return this.http.get(`${this.Order_API_BASE}/allPastOrders?userId=${userId}`, { responseType: 'text' });
   }
 
-  
+  getOrderById(orderId: number): Observable<any> {
+    return this.http.get<any>(`${this.Order_API_BASE}/order/${orderId}`);
+  }
 
 }

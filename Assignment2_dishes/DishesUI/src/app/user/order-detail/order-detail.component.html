@@ -1,1 +1,25 @@
-<p>order-detail works!</p>
+<div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+<div *ngIf="order">
+  <h2>Order Details</h2>
+  <p><strong>Order ID:</strong> {{ order.orderId }}</p>
+  <p><strong>Status:</strong> {{ order.orderStatus }}</p>
+  <p><strong>Total Price:</strong> {{ order.totalPrice | currency }}</p>
+  <h3>Dishes</h3>
+  <table *ngIf="order.dishes && order.dishes.length > 0" class="dish-table">
+    <thead>
+      <tr>
+        <th>Dish Name</th>
+        <th>Quantity</th>
+        <th>Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let dish of order.dishes">
+        <td>{{ dish.dishName }}</td>
+        <td>{{ dish.quantity }}</td>
+        <td>{{ dish.price | currency }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="!order.dishes || order.dishes.length === 0">No dishes in this order.</div>
+</div>

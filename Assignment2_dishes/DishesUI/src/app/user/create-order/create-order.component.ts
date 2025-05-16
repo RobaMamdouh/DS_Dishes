@@ -30,11 +30,11 @@ export class CreateOrderComponent implements OnInit {
 
   addToCart(dish: any): void {
     const quantity = this.quantities[dish.id];
-    if (quantity < 1 || quantity > dish.quantity) {
-      this.errorMessage = 'Please enter a valid quantity.';
-      this.successMessage = '';
-      return;
-    }
+    // if (quantity < 1 || quantity > dish.quantity) {
+    //   this.errorMessage = 'Please enter a valid quantity.';
+    //   this.successMessage = '';
+    //   return;
+    // }
     const cart = JSON.parse(localStorage.getItem('shoppingCart') || '[]');
     const existing = cart.find((item: any) => item.id === dish.id);
     if (existing) {

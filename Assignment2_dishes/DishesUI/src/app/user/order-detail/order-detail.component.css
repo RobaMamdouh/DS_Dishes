@@ -1,0 +1,17 @@
+/* Basic styling for dish table in order detail */
+.dish-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1em;
+}
+.dish-table th, .dish-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+.dish-table th {
+  background-color: #f2f2f2;
+}
+.error {
+  color: red;
+  margin-bottom: 1em;
+}

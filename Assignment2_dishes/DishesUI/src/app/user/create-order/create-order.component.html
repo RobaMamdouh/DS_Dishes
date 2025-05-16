@@ -8,7 +8,7 @@
         <span class="price">{{ dish.price | currency }}</span>
         <div class="form-group">
           <label for="quantity-{{dish.id}}">Order Quantity:</label>
-          <input id="quantity-{{dish.id}}" type="number" [(ngModel)]="quantities[dish.id]" min="1"/>
+          <input id="quantity-{{dish.id}}" type="number" [(ngModel)]="quantities[dish.id]"/>
         </div>
         <button (click)="addToCart(dish)">Add to Cart</button>
       </div>
