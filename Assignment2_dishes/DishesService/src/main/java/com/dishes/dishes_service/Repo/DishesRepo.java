@@ -37,4 +37,6 @@ public class DishesRepo {
                 .setParameter("sellerId", sellerId)
                 .getResultList();
     }
+
+
 }

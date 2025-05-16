@@ -19,6 +19,7 @@ public class dishesModel {
     private int quantity;
     private double price;
     private long userId;
+    private long companyId;
     @ManyToOne
     @JoinColumn(name = "orderId")
     private orderModel order;
@@ -77,5 +78,14 @@ public class dishesModel {
     public void setUserId(long userId) {
         this.userId = userId;
     }
+
+    public long getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(long companyId) {
+        this.companyId = companyId;
+    }
+    
 
 }

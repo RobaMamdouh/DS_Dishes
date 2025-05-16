@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,5 +94,33 @@ public class orderController {
                         ", Username: " + restTemplate.getForObject(USER_SERVICE_URL + dish.getUserId(), String.class))
                 .collect(Collectors.joining("\n"));
     }
+
+@GetMapping("/sold-dishes")
+public List<SoldDishInfo> getSoldDishesBySeller(@RequestParam Long sellerId) {
+    List<SoldDishInfo> soldDishes = new ArrayList<>();
+    // Get all completed orders
+    List<orderModel> completedOrders = orderService.getAllOrders().stream()
+        .filter(order -> order.getOrderStatus() == com.example.orderservice.Models.status.COMPLETED)
+        .collect(Collectors.toList());
+    for (orderModel order : completedOrders) {
+        String buyerUsername;
+        try {
+            buyerUsername = new RestTemplate().getForObject("http://localhost:8082/api/users/getUsernameById?userId=" + order.getUserId(), String.class);
+        } catch (Exception e) {
+            buyerUsername = "Unknown";
+        }
+        for (com.example.orderservice.Models.dishesModel dish : order.getDishes()) {
+            if (dish.getUserId() == sellerId) {
+                soldDishes.add(new SoldDishInfo(
+                    dish.getDishName(),
+                    dish.getQuantity(),
+                    dish.getPrice(),
+                    buyerUsername
+                ));
+            }
+        }
+    }
+    return soldDishes;
+}
 
 }

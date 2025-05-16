@@ -49,7 +49,7 @@ public class orderService {
         }
     }
 
-    public ResponseEntity<?> createOrder(CreateOrderRequest request) {
+   public ResponseEntity<?> createOrder(CreateOrderRequest request) {
         List<dishesModel> dishList = new ArrayList<>();
         List<ReduceDishesDTO> reduceDishesList = new ArrayList<>();
         double totalPrice = 0;
@@ -68,6 +68,7 @@ public class orderService {
         }
 
         // Step 1: Fetch and validate dishes
+        List<Long> exceededDishes = new ArrayList<>();
         for (Map.Entry<Long, Integer> entry : dishIdQuantityMap.entrySet()) {
             Long dishId = entry.getKey();
             int quantity = entry.getValue();
@@ -78,11 +79,10 @@ public class orderService {
 
                 if (fetchedDish != null) {
                     if (quantity > fetchedDish.getQuantity()) {
-                        shouldCancel = true;
-                        cancelReason = "Requested quantity exceeds stock";
-                        logEvent("OrderService", "ERROR", cancelReason);
-                        continue;
-                    }
+                    shouldCancel = true;
+                    exceededDishes.add(dishId);
+                    continue;
+                }
 
                     dishesModel dish = new dishesModel();
                     dish.setDishName(fetchedDish.getDishName());
@@ -97,6 +97,10 @@ public class orderService {
                 logEvent("OrderService", "ERROR", "Failed to fetch dish ID " + dishId + ": " + ex.getMessage());
             }
         }
+        if (!exceededDishes.isEmpty()) {
+            cancelReason = "Requested quantity exceeds stock for dish IDs: " + exceededDishes;
+            logEvent("OrderService", "ERROR", cancelReason);
+        }
 
         // Step 2: Validations
         // Only set the first error encountered, and do not overwrite it with later checks
@@ -104,16 +108,18 @@ public class orderService {
             shouldCancel = true;
             if (cancelReason == null) {
                 cancelReason = "No available dishes in order.";
+                logEvent("OrderService", "ERROR", cancelReason);
             }
-            logEvent("OrderService", "ERROR", cancelReason);
+
         }
 
         if (totalPrice < MINIMUM_ORDER_AMOUNT) {
             shouldCancel = true;
             if (cancelReason == null) {
                 cancelReason = "Order must be at least $" + MINIMUM_ORDER_AMOUNT;
+                logEvent("OrderService", "ERROR", cancelReason);
             }
-            logEvent("OrderService", "ERROR", cancelReason);
+            
         }
 
         ResponseEntity<Double> balanceResponse;
@@ -230,7 +236,6 @@ public class orderService {
     }
 
 
-
     public List<orderModel> getAllPastOrders(long userId) {
         return orderRepo.findAll().stream()
                 .filter(order -> order.getUserId() == userId)
@@ -241,5 +246,8 @@ public class orderService {
         return dishesRepo.findAll();
     }
 
+    public List<orderModel> getAllOrders() {
+        return orderRepo.findAll();
+    }
 
 }

@@ -16,7 +16,7 @@ public class ExternalOrderClient {
     public static List<SoldDishDTO> fetchSoldDishes(Long sellerId) {
         Client client = ClientBuilder.newClient();
         WebTarget target = client
-                .target("http://orders-service/api/orders/sold-dishes")
+                .target("http://localhost:8083/api/orders/sold-dishes")
                 .queryParam("sellerId", sellerId);
 
         GenericType<List<SoldDishDTO>> listType = new GenericType<>() {};
