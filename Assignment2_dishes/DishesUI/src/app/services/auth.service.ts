@@ -30,8 +30,6 @@ login(credentials: any): Observable<any> {
     .set('password', credentials.password);
   return this.http.post(`${this.API_BASE}/login`, null, { params }).pipe(
     tap((response: any) => {
-      // Save userType and username from login response
-      // Determine userType from backend message
       let userType = '';
       if (response.message && response.message.includes('admin')) {
         userType = 'admin';
@@ -44,7 +42,6 @@ login(credentials: any): Observable<any> {
       this.userType = userType;
       localStorage.setItem('username', credentials.username);
 
-      // Fetch the userId using the new backend endpoint
       this.http.get<any>(`${this.API_BASE}/getUserByUsername`, {
         params: new HttpParams().set('username', credentials.username)
       }).subscribe(user => {
@@ -58,15 +55,6 @@ login(credentials: any): Observable<any> {
     })
   );
 }
-
-
-  getUserIdFromStorageOrBackend(username: string): number {
-    if (this.userId !== null) return this.userId;
-
-    // Simulate fetching user ID by username from backend (not implemented)
-    // Assume this was set during login or via a separate API call
-    return 0;
-  }
 
   register(user: { username: string; password: string; balance: number; role: string }): Observable<RegisterResponse> {
   return this.http.post<RegisterResponse>(`${this.API_BASE}/register`, user);

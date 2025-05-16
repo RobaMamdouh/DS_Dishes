@@ -1,1 +1,35 @@
-<p>add-dish works!</p>
+<div class="dish-container">
+  <div class="container">
+    <h2>Add Dish</h2>
+    <form [formGroup]="dishForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="name">Dish Name:</label>
+        <input id="name" formControlName="name" required>
+        <div *ngIf="dishForm.get('name')?.invalid && dishForm.get('name')?.touched"
+             class="error-message">Dish name is required</div>
+      </div>
+
+      <div class="form-group">
+        <label for="price">Price:</label>
+        <input type="number" id="price" formControlName="price" required>
+        <div *ngIf="dishForm.get('price')?.invalid && dishForm.get('price')?.touched"
+             class="error-message">Valid price is required</div>
+      </div>
+
+      <div class="form-group">
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" formControlName="quantity" required>
+        <div *ngIf="dishForm.get('quantity')?.invalid && dishForm.get('quantity')?.touched"
+             class="error-message">Quantity must be at least 1</div>
+      </div>
+
+      <button type="submit">Add Dish</button>
+
+      <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+      <div *ngIf="errorMessages.general" class="error-message">{{ errorMessages.general }}</div>
+    </form>
+  </div>
+  <div class="back">
+    <a routerLink="/seller-home">Back to Home</a>
+  </div>
+</div>

@@ -1,1 +1,18 @@
-<p>view-sold-dishes works!</p>
+<div class="container">
+  <h1>Sold Dishes</h1>
+  <div class="dishes-grid">
+    <div *ngFor="let dish of dishes" class="dish-card">
+      <div class="card-content">
+        <h3>{{ dish.dishName || dish.name }}</h3>
+        <p *ngIf="dish.quantity !== undefined">Quantity: {{ dish.quantity }}</p>
+        <span class="price" *ngIf="dish.price !== undefined">{{ dish.price | currency }}</span>
+        <p *ngIf="dish.buyerUsername"><strong>Buyer:</strong> {{ dish.buyerUsername }}</p>
+        <button (click)="viewDishDetails(dish.dishId || dish.id)">View Details</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="back">
+    <a routerLink="/seller-home">Back to Home</a>
+  </div>

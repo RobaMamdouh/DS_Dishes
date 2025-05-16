@@ -17,6 +17,8 @@ import { ViewSoldDishesComponent } from './company/view-sold-dishes/view-sold-di
 import { AddDishComponent } from './company/add-dish/add-dish.component';
 import { UpdateDishComponent } from './company/update-dish/update-dish.component';
 import { ViewDishesComponent } from './company/view-dishes/view-dishes.component';
+import { DishDetailComponent } from './company/dish-detail/dish-detail.component';
+
 
 
 @NgModule({
@@ -34,7 +36,8 @@ import { ViewDishesComponent } from './company/view-dishes/view-dishes.component
     ViewSoldDishesComponent,
     AddDishComponent,
     UpdateDishComponent,
-    ViewDishesComponent
+    ViewDishesComponent,
+    DishDetailComponent,
   ],
   imports: [
     BrowserModule,

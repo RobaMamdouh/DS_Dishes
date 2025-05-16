@@ -12,14 +12,14 @@ import java.util.List;
 
 @Stateless
 public class ExternalOrderClient {
-    public static List<SoldDishDTO> fetchSoldDishes() {
+
+    public static List<SoldDishDTO> fetchSoldDishes(Long sellerId) {
         Client client = ClientBuilder.newClient();
-        WebTarget target = client.target("http://orders-service/api/orders/sold-dishes");
+        WebTarget target = client
+                .target("http://orders-service/api/orders/sold-dishes")
+                .queryParam("sellerId", sellerId);
 
         GenericType<List<SoldDishDTO>> listType = new GenericType<>() {};
         return target.request(MediaType.APPLICATION_JSON).get(listType);
     }
-
-
 }
-

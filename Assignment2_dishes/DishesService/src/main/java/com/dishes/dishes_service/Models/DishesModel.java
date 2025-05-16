@@ -13,16 +13,18 @@ public class DishesModel {
     private String name;
     private int quantity;
     private double price;
+    private Long sellerId;
 
 
 
     public DishesModel() {
     }
 
-    public DishesModel(String name, int quantity, double price) {
+    public DishesModel(String name, int quantity, double price, Long sellerId) {
         this.name = name;
         this.quantity = quantity;
         this.price = price;
+        this.sellerId = sellerId;
     }
 
 
@@ -56,6 +58,14 @@ public class DishesModel {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public Long getSellerId() {
+        return sellerId;
+    }
+
+    public void setSellerId(Long sellerId) {
+        this.sellerId = sellerId;
     }
 
 

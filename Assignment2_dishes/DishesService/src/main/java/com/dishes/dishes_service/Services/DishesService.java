@@ -16,10 +16,6 @@ public class DishesService {
     @Inject
     private DishesRepo dishesRepo;
 
-    public List<DishesModel> getAllDishes() {
-        return dishesRepo.getAllDishes();
-    }
-
     public DishesModel getDishById(Long id) {
         return dishesRepo.getDishById(id);
     }
@@ -47,19 +43,14 @@ public class DishesService {
         return dishesRepo.getAvailableDishes();
     }
 
-    public List<SoldDishDTO> getSoldDishesWithUsers() {
-        return ExternalOrderClient.fetchSoldDishes();
+    public List<SoldDishDTO> getSoldDishesBySeller(Long sellerId) {
+        return ExternalOrderClient.fetchSoldDishes(sellerId);
     }
 
-    public void reduceDishQuantity(Long dishId, int quantity) {
-        DishesModel dish = dishesRepo.findById(dishId);
-        if (dish == null) {
-            throw new EntityNotFoundException("Dish not found");
-        }
-        if (dish.getQuantity() < quantity) {
-            throw new IllegalArgumentException("Not enough stock for dish ID: " + dishId);
-        }
-        dish.setQuantity(dish.getQuantity() - quantity);
+
+
+    public List<DishesModel> getDishesBySellerId(Long sellerId) {
+        return dishesRepo.getDishesBySellerId(sellerId);
     }
 
 }

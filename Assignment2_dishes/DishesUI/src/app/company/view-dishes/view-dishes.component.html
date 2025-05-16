@@ -1,1 +1,20 @@
-<p>view-dishes works!</p>
+<div class="container">
+  <h1>Dishes</h1>
+
+  <div class="dishes-grid">
+    <div *ngFor="let dish of dishes" class="dish-card">
+      <div class="card-content">
+        <h3>{{ dish.name }}</h3>
+        <p>Quantity: {{ dish.quantity }}</p>
+        <span class="price">{{ dish.price | currency }}</span>
+        <br>
+        <a routerLink="/update-dish/{{ dish.id }}" class="btn btn-primary">Update</a>
+      </div>
+    </div>
+  </div>
+    <div class="back">
+    <a routerLink="/seller-home">Back to Home</a>
+  </div>
+</div>
+
+

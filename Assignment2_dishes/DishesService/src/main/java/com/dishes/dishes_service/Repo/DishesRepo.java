@@ -12,10 +12,6 @@ public class DishesRepo {
     @PersistenceContext(unitName = "dishesPU")
     private EntityManager em;
 
-    public List<DishesModel> getAllDishes() {
-        return em.createQuery("SELECT d FROM DishesModel d ", DishesModel.class).getResultList();
-    }
-
     public List<DishesModel> getAvailableDishes() {
         return em.createQuery("SELECT d FROM DishesModel d WHERE d.quantity > 0", DishesModel.class).getResultList();
     }
@@ -34,5 +30,11 @@ public class DishesRepo {
 
     public DishesModel findById(Long id) {
         return em.find(DishesModel.class, id);
+    }
+
+    public List<DishesModel> getDishesBySellerId(Long sellerId) {
+        return em.createQuery("SELECT d FROM DishesModel d WHERE d.sellerId = :sellerId", DishesModel.class)
+                .setParameter("sellerId", sellerId)
+                .getResultList();
     }
 }

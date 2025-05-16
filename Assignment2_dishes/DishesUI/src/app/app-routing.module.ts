@@ -13,6 +13,7 @@ import { UpdateDishComponent } from './company/update-dish/update-dish.component
 import { AddDishComponent } from './company/add-dish/add-dish.component';
 import { ViewSoldDishesComponent } from './company/view-sold-dishes/view-sold-dishes.component';
 import { ViewDishesComponent } from './company/view-dishes/view-dishes.component';
+import { DishDetailComponent } from './company/dish-detail/dish-detail.component';
 
 
 
@@ -30,6 +31,7 @@ const routes: Routes = [
   { path: 'add-dish', component: AddDishComponent },
   { path: 'view-sold-dishes', component: ViewSoldDishesComponent },
   { path: 'view-dishes', component: ViewDishesComponent },
+  { path: 'dish-detail/:id', component: DishDetailComponent },
   { path: '', redirectTo: '/landingpage', pathMatch: 'full' },
 ];
 
