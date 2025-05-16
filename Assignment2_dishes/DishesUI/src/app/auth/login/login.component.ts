@@ -36,32 +36,40 @@ export class LoginComponent {
 
     const credentials = {username: this.username, password: this.password};
 
-    this.authService.login(credentials).subscribe(
-      response => {
-        if (response.message === 'Login successful') {
-          this.successMessage = 'Login successful!';
-          const userId = this.authService.getUserId();
-          const userType = this.authService.getUserType();
-          console.log('Logged in user ID:', userId);
-          if (userType == "user") {
-            setTimeout(() => {
-              this.router.navigate(['/user-home']);
-            }, 1000);
-          } else if (userType == "seller") {
-            setTimeout(() => {
-              this.router.navigate(['/seller-home']);
-            }, 1000);
-          } else {
-            setTimeout(() => {
-              this.router.navigate(['/admin-home']);
-            }, 1000);
-          }
-        }
-      },
-      error => {
-        this.errorMessages.general = error.error?.error || 'Login failed';
+this.authService.login(credentials).subscribe(
+  response => {
+    if (
+      response.message === 'Logged in as user successfully' ||
+      response.message === 'Logged in as admin successfully' ||
+      response.message === 'Logged in as company successfully'
+    ) {
+      this.successMessage = 'Login successful!';
+      const userId = this.authService.getUserId();
+      const userType = this.authService.getUserType();
+      console.log('Logged in user ID:', userId, 'userType:', userType);
+      if (userType && userType.toLowerCase() === "user") {
+        setTimeout(() => {
+          this.router.navigate(['/user-home']);
+        }, 1000);
+      } else if (userType && (userType.toLowerCase() === "seller" || userType.toLowerCase() === "company")) {
+        setTimeout(() => {
+          this.router.navigate(['/seller-home']);
+        }, 1000);
+      } else if (userType && userType.toLowerCase() === "admin") {
+        setTimeout(() => {
+          this.router.navigate(['/admin-home']);
+        }, 1000);
+      } else {
+        this.errorMessages.general = 'Unknown user type: ' + userType;
       }
-    );
+    } else {
+      this.errorMessages.general = response.message || 'Login failed';
+    }
+  },
+  error => {
+    this.errorMessages.general = error.error?.error || 'Login failed';
+  }
+);
   }
 
 

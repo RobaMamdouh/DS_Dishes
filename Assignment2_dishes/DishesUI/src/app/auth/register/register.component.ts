@@ -11,7 +11,8 @@ export class RegisterComponent {
 
   username: string = '';
   password: string = '';
-  errorMessages: { password?: string; username?: string; general?: string } = {};
+  balance: number = 0;
+  errorMessages: {balance?: string; password?: string; username?: string; general?: string } = {};
   successMessage: string = '';
 
   constructor(private authService: AuthService, private router: Router) { }
@@ -35,14 +36,24 @@ export class RegisterComponent {
     if (!this.password) {
       this.errorMessages.password = 'Password is required';
     }
+    if (this.balance < 0) {
+      this.errorMessages.balance = 'Balance cannot be negative';
+    } 
 
     // If there are any errors, return early
     if (Object.keys(this.errorMessages).length > 0) {
       return;
     }
 
-    const user = { username: this.username, password: this.password};
-
+    // Add role: 'USER' to registration payload and ensure balance is a number
+    const user = { 
+      username: this.username, 
+      password: this.password, 
+      balance: Number(this.balance), // Ensure it's a number
+      role: 'USER' 
+    };
+    console.log('Register payload:', user); // Debug: log payload
+  
     this.authService.register(user).subscribe(
       response => {
         this.successMessage = response.message;

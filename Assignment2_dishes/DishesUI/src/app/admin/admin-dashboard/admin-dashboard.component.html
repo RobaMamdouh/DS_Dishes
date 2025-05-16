@@ -1,1 +1,15 @@
-<p>admin-dashboard works!</p>
+<section class="landing-content">
+    <div class="landing-text">
+        <h1>Welcome {{getUsername()}} </h1>
+        <br>
+        <h2> to Admin Dashboard</h2>
+        <br><br>
+        <div class="button-row">
+            <a routerLink="/create-company-account">Create seller Account</a>
+            <a routerLink="/view-users">View Users</a>
+            <a routerLink="/view-companies">View Sellers</a>
+        </div>
+        <br> <br> <br>
+        <a routerLink="/landingpage">Logout</a>
+    </div>
+</section>

@@ -17,8 +17,12 @@ public class DishesModel {
     @Column(name = "sold")
     private boolean sold;
 
-    public DishesModel() {
+//    @ManyToOne
+//    @JoinColumn(name="user_id")
+//    private UserModel user;
 
+    public DishesModel() {
+        this.sold = false;
     }
 
     public DishesModel(String name, int quantity, double price) {
@@ -69,5 +73,12 @@ public class DishesModel {
         this.sold = sold;
     }
 
+//    public UserModel getUser() {
+//        return user;
+//    }
+//
+//    public void setUser(UserModel user) {
+//        this.user = user;
+//    }
 
 }

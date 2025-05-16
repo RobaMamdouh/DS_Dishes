@@ -104,4 +104,13 @@ public class userService {
         userModel user = userRepo.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         return user.getUsername();
     }
+
+    public userModel getUserByUsername(String username) {
+        userModel user = userRepo.findByUsername(username);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+        return user;
+    }
+
 }

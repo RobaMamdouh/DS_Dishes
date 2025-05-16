@@ -1,0 +1,24 @@
+<div class="container">
+  <h1>All Users Accounts</h1>
+  <table>
+    <thead>
+    <tr>
+      <th class="header">ID</th>
+      <th class="header">Username</th>
+      <th class="header">Balance</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let user of Users">
+      <td >{{ user.id }}</td>
+      <td>{{ user.username }}</td>
+      <td>{{ user.balance }}</td>
+    </tr>
+    </tbody>
+  </table>
+  <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="error-message">{{ errorMessage}}</div>
+</div>
+  <div class="back">
+    <a routerLink="/admin-home">Back to Dahboard</a>
+  </div>

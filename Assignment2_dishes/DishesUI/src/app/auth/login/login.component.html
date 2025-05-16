@@ -1,7 +1,4 @@
 <section class="landing-content">
-  <div class="landing-logo">
-    <img src="assets/logo.png" alt="HomeDine Logo"/>
-  </div>
   <div class="login-container">
     <div class="container">
       <h2>Login</h2>
@@ -22,5 +19,8 @@
       <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
       <div *ngIf="errorMessages.general" class="error-message">{{ errorMessages.general }}</div>
     </div>
+  </div>
+  <div class="back">
+    <a routerLink="/landingpage">Back to Home</a>
   </div>
 </section>

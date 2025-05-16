@@ -14,12 +14,13 @@ public class securityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // Disable CSRF protection
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/users/register", "/api/users/login" ,"/api/users/userById" , "/api/users/createCompany"
-                        ,"api/users/allUsers" , "/api/users/allCompanies" , "/api/users/getUsernameById").permitAll()
+                        .requestMatchers("/api/users/register", "/api/users/login", "/api/users/userById", "/api/users/createCompany"
+                                , "api/users/allUsers", "/api/users/allCompanies", "/api/users/getUsernameById","/api/users/getUserByUsername").permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults()); // Enable HTTP Basic Auth
 
         return http.build();
     }
+
 }

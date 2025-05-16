@@ -40,7 +40,6 @@ public class DishesService {
             existingDish.setName(updatedDish.getName());
             existingDish.setPrice(updatedDish.getPrice());
             existingDish.setQuantity(updatedDish.getQuantity());
-            existingDish.setSold(updatedDish.isSold());
         } else {
             throw new EntityNotFoundException("Dish with ID " + id + " not found.");
         }

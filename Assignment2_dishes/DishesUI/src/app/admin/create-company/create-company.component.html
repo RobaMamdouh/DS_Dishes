@@ -1,0 +1,20 @@
+<section class="landing-content">
+  <div class="login-container">
+    <div class="container">
+      <h2>Login</h2>
+      <form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" formControlName="username" name="username"/>
+          <div *ngIf="errorMessages.username" class="error-message">{{ errorMessages.username }}</div>
+        </div>
+        <button type="submit">Create Company Seller Account</button>
+      </form>
+      <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+      <div *ngIf="errorMessages.general" class="error-message">{{ errorMessages.general }}</div>
+    </div>
+  </div>
+  <div class="back">
+    <a routerLink="/admin-home">Back to Dahboard</a>
+  </div>
+</section>
