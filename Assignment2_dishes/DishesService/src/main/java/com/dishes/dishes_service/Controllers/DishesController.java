@@ -1,5 +1,6 @@
 package com.dishes.dishes_service.Controllers;
 
+import com.dishes.dishes_service.DTO.ReduceDishesDTO;
 import com.dishes.dishes_service.Models.DishesModel;
 import com.dishes.dishes_service.Services.DishesService;
 import com.dishes.dishes_service.Models.SoldDishDTO;
@@ -51,5 +52,20 @@ public class DishesController {
     @Path("/sold-with-users")
     public List<SoldDishDTO> getSoldDishesWithUsers() {
         return dishesService.getSoldDishesWithUsers();
+    }
+
+    @POST
+    @Path("/reduce-stock")
+    public Response reduceStock(List<ReduceDishesDTO> soldDishes) {
+        try {
+            for (ReduceDishesDTO soldDish : soldDishes) {
+                dishesService.reduceDishQuantity(soldDish.getDishId(), soldDish.getQuantity());
+            }
+            return Response.ok().entity("Stock reduced successfully").build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Failed to reduce stock: " + e.getMessage())
+                    .build();
+        }
     }
 }

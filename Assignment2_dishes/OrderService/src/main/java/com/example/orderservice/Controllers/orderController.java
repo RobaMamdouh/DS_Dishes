@@ -58,7 +58,7 @@ public class orderController {
                 .collect(Collectors.joining("\n"));
     }
 
-    private final String USER_SERVICE_URL = "http://localhost:8080/api/users/getUsernameById?userId=";
+    private final String USER_SERVICE_URL = "http://localhost:8082/api/users/getUsernameById?userId=";
     private RestTemplate restTemplate = new RestTemplate();
 
     @GetMapping("/alldishes")

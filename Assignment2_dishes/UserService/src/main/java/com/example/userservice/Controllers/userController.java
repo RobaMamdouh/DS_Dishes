@@ -141,10 +141,10 @@ public class userController {
         return userService.getAllCompanies();
     }
 
-    //     @GetMapping("/getUsernameById")
-    // public String getUsernameById(@RequestParam long userId) {
-    //     return userService.getUsernameById(userId);
-    // }
+         @GetMapping("/getUsernameById")
+     public String getUsernameById(@RequestParam long userId) {
+         return userService.getUsernameById(userId);
+     }
 
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/getUserByUsername")

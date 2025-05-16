@@ -1,18 +1,17 @@
 package com.example.orderservice.Services;
 
 import com.example.orderservice.DTO.CreateOrderRequest;
+import com.example.orderservice.DTO.ReduceDishesDTO;
 import com.example.orderservice.DTO.SoldDishInfo;
 import com.example.orderservice.Models.dishesModel;
 import com.example.orderservice.Models.status;
 import com.example.orderservice.Repo.DishesRepo;
 import com.example.orderservice.Repo.orderRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.example.orderservice.Models.orderModel;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -80,6 +79,7 @@ public class orderService {
 
     public ResponseEntity<?> createOrder(CreateOrderRequest request) {
         List<dishesModel> dishList = new ArrayList<>();
+        List<ReduceDishesDTO> reduceDishesList = new ArrayList<>();
         double totalPrice = 0;
         double MINIMUM_ORDER_AMOUNT = 50.0;
         boolean shouldCancel = false;
@@ -107,6 +107,7 @@ public class orderService {
                     dish.setUserId(request.getUserId());
                     totalPrice += dish.getPrice();
                     dishList.add(dish);
+                    reduceDishesList.add(new ReduceDishesDTO(dishId, quantity));
                 }
             } catch (Exception ex) {
                 System.out.println("Error fetching dish with ID " + dishId + ": " + ex.getMessage());
@@ -138,15 +139,24 @@ public class orderService {
             order.setDishesId(dishList);
             order.setTotalPrice(totalPrice);
             order.setOrderStatus(status.COMPLETED);
-
             orderModel savedOrder = orderRepo.save(order);
+            try {
+                String reduceStockUrl = DISH_SERVICE_URL + "/reduce-stock";
+                ResponseEntity<String> reduceResponse = restTemplate.postForEntity(reduceStockUrl, reduceDishesList, String.class);
+
+                if (!reduceResponse.getStatusCode().is2xxSuccessful()) {
+                    System.out.println("Warning: Stock reduction failed in dishes service.");
+                }
+            } catch (Exception e) {
+                System.out.println("Error reducing dish stock: " + e.getMessage());
+            }
             return ResponseEntity.ok(savedOrder);
         }
     }
 
     public List<orderModel> getAllPastOrders(long userId) {
         return orderRepo.findAll().stream()
-                .filter(order -> order.getUserId() == userId && (order.getOrderStatus() == status.COMPLETED || order.getOrderStatus() == status.CANCELLED))
+                .filter(order -> order.getUserId() == userId)
                 .collect(Collectors.toList());
     }
 
