@@ -16,8 +16,8 @@ public class DishesRepo {
         return em.createQuery("SELECT d FROM DishesModel d ", DishesModel.class).getResultList();
     }
 
-    public List<DishesModel> getSoldDishes() {
-        return em.createQuery("SELECT d FROM DishesModel d WHERE d.sold = true", DishesModel.class).getResultList();
+    public List<DishesModel> getAvailableDishes() {
+        return em.createQuery("SELECT d FROM DishesModel d WHERE d.quantity > 0", DishesModel.class).getResultList();
     }
 
     public DishesModel getDishById(Long id) {

@@ -1,6 +1,7 @@
 package com.example.orderservice.Controllers;
 
 import com.example.orderservice.DTO.CreateOrderRequest;
+import com.example.orderservice.DTO.SoldDishInfo;
 import com.example.orderservice.Models.orderModel;
 import com.example.orderservice.Services.orderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -70,5 +72,11 @@ public class orderController {
                         ", User ID: " + dish.getUserId() +
                         ", Username: " + restTemplate.getForObject(USER_SERVICE_URL + dish.getUserId(), String.class))
                 .collect(Collectors.joining("\n"));
+    }
+
+
+    @GetMapping("/sold-dishes")
+    public List<SoldDishInfo> getSoldDishesWithUsernames() {
+        return orderService.getSoldDishesWithUsernames();
     }
 }

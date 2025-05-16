@@ -2,6 +2,7 @@ package com.dishes.dishes_service.Controllers;
 
 import com.dishes.dishes_service.Models.DishesModel;
 import com.dishes.dishes_service.Services.DishesService;
+import com.dishes.dishes_service.Models.SoldDishDTO;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
@@ -22,9 +23,9 @@ public class DishesController {
     }
 
     @GET
-    @Path("/sold")
-    public List<DishesModel> getSoldDishes() {
-        return dishesService.getSoldDishes();
+    @Path("/available")
+    public List<DishesModel> getAvailableDishes() {
+        return dishesService.getAvailableDishes();
     }
 
     @POST
@@ -44,5 +45,11 @@ public class DishesController {
     @Path("/{id}")
     public DishesModel getDishById(@PathParam("id") Long id) {
         return dishesService.getDishById(id);
+    }
+
+    @GET
+    @Path("/sold-with-users")
+    public List<SoldDishDTO> getSoldDishesWithUsers() {
+        return dishesService.getSoldDishesWithUsers();
     }
 }

@@ -1,6 +1,8 @@
 package com.dishes.dishes_service.Services;
 
+import com.dishes.dishes_service.Controllers.ExternalOrderClient;
 import com.dishes.dishes_service.Models.DishesModel;
+import com.dishes.dishes_service.Models.SoldDishDTO;
 import com.dishes.dishes_service.Repo.DishesRepo;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
@@ -16,10 +18,6 @@ public class DishesService {
 
     public List<DishesModel> getAllDishes() {
         return dishesRepo.getAllDishes();
-    }
-
-    public List<DishesModel> getSoldDishes() {
-        return dishesRepo.getSoldDishes();
     }
 
     public DishesModel getDishById(Long id) {
@@ -43,5 +41,13 @@ public class DishesService {
         } else {
             throw new EntityNotFoundException("Dish with ID " + id + " not found.");
         }
+    }
+
+    public List<DishesModel> getAvailableDishes() {
+        return dishesRepo.getAvailableDishes();
+    }
+
+    public List<SoldDishDTO> getSoldDishesWithUsers() {
+        return ExternalOrderClient.fetchSoldDishes();
     }
 }
