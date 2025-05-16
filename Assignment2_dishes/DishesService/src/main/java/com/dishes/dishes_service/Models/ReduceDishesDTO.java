@@ -1,17 +1,16 @@
-package com.dishes.dishes_service.DTO;
+package com.dishes.dishes_service.Models;
 
 public class ReduceDishesDTO {
     private Long dishId;
     private int quantity;
 
-    // Constructors
     public ReduceDishesDTO() {}
+
     public ReduceDishesDTO(Long dishId, int quantity) {
         this.dishId = dishId;
         this.quantity = quantity;
     }
 
-    // Getters and Setters
     public Long getDishId() {
         return dishId;
     }

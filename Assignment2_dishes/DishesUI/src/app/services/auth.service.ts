@@ -18,6 +18,7 @@ export class AuthService {
  private userId: number | null = null;
   private userType: string | null = null;
   private username: string | null = null;
+  private balance: number | null = null;
 
   private readonly API_BASE = 'http://localhost:8082/api/users'; 
 
@@ -30,8 +31,6 @@ login(credentials: any): Observable<any> {
     .set('password', credentials.password);
   return this.http.post(`${this.API_BASE}/login`, null, { params }).pipe(
     tap((response: any) => {
-      // Save userType and username from login response
-      // Determine userType from backend message
       let userType = '';
       if (response.message && response.message.includes('admin')) {
         userType = 'admin';
@@ -44,7 +43,6 @@ login(credentials: any): Observable<any> {
       this.userType = userType;
       localStorage.setItem('username', credentials.username);
 
-      // Fetch the userId using the new backend endpoint
       this.http.get<any>(`${this.API_BASE}/getUserByUsername`, {
         params: new HttpParams().set('username', credentials.username)
       }).subscribe(user => {
@@ -58,15 +56,6 @@ login(credentials: any): Observable<any> {
     })
   );
 }
-
-
-  getUserIdFromStorageOrBackend(username: string): number {
-    if (this.userId !== null) return this.userId;
-
-    // Simulate fetching user ID by username from backend (not implemented)
-    // Assume this was set during login or via a separate API call
-    return 0;
-  }
 
   register(user: { username: string; password: string; balance: number; role: string }): Observable<RegisterResponse> {
   return this.http.post<RegisterResponse>(`${this.API_BASE}/register`, user);
@@ -92,6 +81,23 @@ login(credentials: any): Observable<any> {
   getUserType(): string | null {
     return this.userType || localStorage.getItem('userType');
   }
+
+  getUserBalance(): Observable<any> {
+    const username = this.username || localStorage.getItem('username');
+    if (!username) {
+      throw new Error('Username not found');
+    }
+    return this.http.get<any>(`${this.API_BASE}/getUserByUsername`, {
+      params: new HttpParams().set('username', username)
+    }).pipe(
+      tap(user => {
+        if (user && user.balance !== undefined) {
+          this.balance = user.balance;
+        }
+      })
+    );
+  }
+
 
 
 }

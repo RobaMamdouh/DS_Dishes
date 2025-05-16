@@ -26,6 +26,12 @@
     margin: 0;
 }
 
+.landing-text h3 {
+    font-size: 30px;
+    color: #0c2b45;
+    margin: 0;
+}
+
 .landing-text p {
     font-size: 25px;
     color: #4d4c4c;

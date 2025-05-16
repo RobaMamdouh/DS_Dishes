@@ -1,0 +1,20 @@
+<div class="payment-container">
+  <h2>Payment Failures</h2>
+  <table *ngIf="failures && failures.length > 0; else noFailures">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Failure Message</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let failure of failures; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ failure }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <ng-template #noFailures>
+    <p>No payment failures found.</p>
+  </ng-template>
+</div>

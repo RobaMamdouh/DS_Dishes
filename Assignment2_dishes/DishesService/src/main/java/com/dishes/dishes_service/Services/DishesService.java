@@ -16,10 +16,6 @@ public class DishesService {
     @Inject
     private DishesRepo dishesRepo;
 
-    public List<DishesModel> getAllDishes() {
-        return dishesRepo.getAllDishes();
-    }
-
     public DishesModel getDishById(Long id) {
         return dishesRepo.getDishById(id);
     }
@@ -47,19 +43,26 @@ public class DishesService {
         return dishesRepo.getAvailableDishes();
     }
 
-    public List<SoldDishDTO> getSoldDishesWithUsers() {
-        return ExternalOrderClient.fetchSoldDishes();
+    public List<SoldDishDTO> getSoldDishesBySeller(Long sellerId) {
+        return ExternalOrderClient.fetchSoldDishes(sellerId);
     }
 
-    public void reduceDishQuantity(Long dishId, int quantity) {
-        DishesModel dish = dishesRepo.findById(dishId);
-        if (dish == null) {
-            throw new EntityNotFoundException("Dish not found");
+    public List<DishesModel> getDishesBySellerId(Long sellerId) {
+        return dishesRepo.getDishesBySellerId(sellerId);
+    }
+
+    public void reduceQuantity(List<com.dishes.dishes_service.Models.ReduceDishesDTO> reduceDishesList) {
+        for (com.dishes.dishes_service.Models.ReduceDishesDTO dto : reduceDishesList) {
+            DishesModel dish = getDishById(dto.getDishId());
+            if (dish == null) {
+                throw new EntityNotFoundException("Dish with ID " + dto.getDishId() + " not found.");
+            }
+            if (dish.getQuantity() < dto.getQuantity()) {
+                throw new IllegalArgumentException("Not enough stock for dish ID " + dto.getDishId());
+            }
+            dish.setQuantity(dish.getQuantity() - dto.getQuantity());
+            updateDish(dish.getId(), dish);
         }
-        if (dish.getQuantity() < quantity) {
-            throw new IllegalArgumentException("Not enough stock for dish ID: " + dishId);
-        }
-        dish.setQuantity(dish.getQuantity() - quantity);
     }
 
 }

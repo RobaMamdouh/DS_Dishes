@@ -1,6 +1,5 @@
 package com.dishes.dishes_service.Controllers;
 
-import com.dishes.dishes_service.DTO.ReduceDishesDTO;
 import com.dishes.dishes_service.Models.DishesModel;
 import com.dishes.dishes_service.Services.DishesService;
 import com.dishes.dishes_service.Models.SoldDishDTO;
@@ -18,10 +17,6 @@ public class DishesController {
     @Inject
     private DishesService dishesService;
 
-    @GET
-    public List<DishesModel> getAllDishes() {
-        return dishesService.getAllDishes();
-    }
 
     @GET
     @Path("/available")
@@ -49,23 +44,39 @@ public class DishesController {
     }
 
     @GET
-    @Path("/sold-with-users")
-    public List<SoldDishDTO> getSoldDishesWithUsers() {
-        return dishesService.getSoldDishesWithUsers();
+    @Path("/sold-with-users/{sellerId}")
+    public List<SoldDishDTO> getSoldDishesBySeller(@PathParam("sellerId") Long sellerId) {
+        return dishesService.getSoldDishesBySeller(sellerId);
+    }
+
+    @GET
+    @Path("/seller/{sellerId}")
+    public List<DishesModel> getDishesBySeller(@PathParam("sellerId") Long sellerId) {
+        return dishesService.getDishesBySellerId(sellerId);
     }
 
     @POST
-    @Path("/reduce-stock")
-    public Response reduceStock(List<ReduceDishesDTO> soldDishes) {
+    @Path("/reduceQuantity")
+    public Response reduceQuantity(List<com.dishes.dishes_service.Models.ReduceDishesDTO> reduceDishesList) {
         try {
-            for (ReduceDishesDTO soldDish : soldDishes) {
-                dishesService.reduceDishQuantity(soldDish.getDishId(), soldDish.getQuantity());
+            for (com.dishes.dishes_service.Models.ReduceDishesDTO dto : reduceDishesList) {
+                DishesModel dish = dishesService.getDishById(dto.getDishId());
+                if (dish == null) {
+                    return Response.status(Response.Status.NOT_FOUND)
+                        .entity("Dish with ID " + dto.getDishId() + " not found.").build();
+                }
+                if (dish.getQuantity() < dto.getQuantity()) {
+                    return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("Not enough stock for dish ID " + dto.getDishId()).build();
+                }
+                dish.setQuantity(dish.getQuantity() - dto.getQuantity());
+                dishesService.updateDish(dish.getId(), dish);
             }
-            return Response.ok().entity("Stock reduced successfully").build();
+            return Response.ok().build();
         } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("Failed to reduce stock: " + e.getMessage())
-                    .build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity("Error reducing dish quantities: " + e.getMessage()).build();
         }
     }
+
 }

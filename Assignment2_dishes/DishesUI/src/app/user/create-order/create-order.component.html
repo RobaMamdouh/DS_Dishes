@@ -1,0 +1,23 @@
+<div class="container">
+  <h1>Available Dishes</h1>
+  <div class="dishes-grid">
+    <div *ngFor="let dish of dishes" class="dish-card">
+      <div class="card-content">
+        <h3>{{ dish.name }}</h3>
+        <p>Quantity: {{ dish.quantity }}</p>
+        <span class="price">{{ dish.price | currency }}</span>
+        <div class="form-group">
+          <label for="quantity-{{dish.id}}">Order Quantity:</label>
+          <input id="quantity-{{dish.id}}" type="number" [(ngModel)]="quantities[dish.id]"/>
+        </div>
+        <button (click)="addToCart(dish)">Add to Cart</button>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+  <div class="back">
+    <a routerLink="/user-home">Back to Dashboard</a>
+    <a routerLink="/shopping-cart">Go to Shopping Cart</a>
+  </div>
+</div>

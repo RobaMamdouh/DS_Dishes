@@ -30,4 +30,14 @@ export class AdminService {
   createCompanyAccount(formData: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/createCompany`, formData);
   }
+
+  getPaymentFailedMessages(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/messages/payment-failed`);
+  }
+
+  getErrorLogMessages(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/messages/error-logs`);
+  }
+
+ 
 }

@@ -1,0 +1,18 @@
+<div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+<table *ngIf="orders.length > 0" class="order-table">
+  <thead>
+    <tr>
+      <th>Order ID</th>
+      <th>Total Price</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let order of orders" (click)="goToOrderDetail(order.orderId)" style="cursor:pointer">
+      <td>{{ order.orderId }}</td>
+      <td>{{ order.totalPrice | currency }}</td>
+      <td>{{ order.status || order.orderStatus }}</td>
+    </tr>
+  </tbody>
+</table>
+<div *ngIf="!errorMessage && orders.length === 0">No orders found.</div>

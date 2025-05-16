@@ -4,9 +4,9 @@ import java.util.Map;
 
 public class CreateOrderRequest {
     private long userId;
-    private Map<Long, Integer> dishIdQuantityMap;
+    private Map<String, Integer> dishIdQuantityMap;
 
-    public CreateOrderRequest(long userId, Map<Long, Integer> dishIdQuantityMap) {
+    public CreateOrderRequest(long userId, Map<String, Integer> dishIdQuantityMap) {
         this.userId = userId;
         this.dishIdQuantityMap = dishIdQuantityMap;
     }
@@ -17,10 +17,10 @@ public class CreateOrderRequest {
     public void setUserId(long userId) {
         this.userId = userId;
     }
-    public Map<Long, Integer> getDishIdQuantityMap() {
+    public Map<String, Integer> getDishIdQuantityMap() {
         return dishIdQuantityMap;
     }
-    public void setDishIdQuantityMap(Map<Long, Integer> dishIdQuantityMap) {
+    public void setDishIdQuantityMap(Map<String, Integer> dishIdQuantityMap) {
         this.dishIdQuantityMap = dishIdQuantityMap;
     }
 }
