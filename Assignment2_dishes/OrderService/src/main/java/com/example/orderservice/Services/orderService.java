@@ -150,6 +150,20 @@ public class orderService {
             } catch (Exception e) {
                 System.out.println("Error reducing dish stock: " + e.getMessage());
             }
+            try {
+                String reduceBalanceUrl = "http://localhost:8082/api/users/reduce-balance?userId="
+                        + request.getUserId() + "&amount=" + totalPrice;
+
+
+                ResponseEntity<String> balanceResponse = restTemplate.postForEntity(reduceBalanceUrl, null, String.class);
+
+                if (!balanceResponse.getStatusCode().is2xxSuccessful()) {
+                    System.out.println("Balance deduction failed. Optionally trigger compensation here.");
+                }
+            } catch (Exception e) {
+                System.out.println("Error reducing user balance: " + e.getMessage());
+            }
+
             return ResponseEntity.ok(savedOrder);
         }
     }

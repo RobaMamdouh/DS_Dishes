@@ -113,4 +113,17 @@ public class userService {
         return user;
     }
 
+    public boolean reduceBalance(long userId, double amount) {
+        userModel user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (user.getBalance() < amount) {
+            return false;
+        }
+
+        user.setBalance(user.getBalance() - amount);
+        userRepo.save(user);
+        return true;
+    }
+
+
 }

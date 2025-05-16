@@ -151,4 +151,14 @@ public class userController {
     public userModel getUserByUsername(@RequestParam String username) {
         return userService.getUserByUsername(username);
     }
+
+    @PostMapping("/reduce-balance")
+    public ResponseEntity<?> reduceBalance(@RequestParam long userId, @RequestParam double amount) {
+        boolean success = userService.reduceBalance(userId, amount);
+        if (!success) {
+            return ResponseEntity.badRequest().body("Insufficient balance.");
+        }
+        return ResponseEntity.ok("Balance reduced successfully.");
+    }
+
 }

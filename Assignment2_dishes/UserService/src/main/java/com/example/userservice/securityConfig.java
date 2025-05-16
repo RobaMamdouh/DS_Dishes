@@ -15,7 +15,7 @@ public class securityConfig {
                 .csrf(csrf -> csrf.disable()) // Disable CSRF protection
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/users/register", "/api/users/login", "/api/users/userById", "/api/users/createCompany"
-                                , "api/users/allUsers", "/api/users/allCompanies", "/api/users/getUsernameById","/api/users/getUserByUsername").permitAll()
+                                , "api/users/allUsers", "/api/users/allCompanies", "/api/users/getUsernameById","/api/users/getUserByUsername","/api/users/reduce-balance").permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults()); // Enable HTTP Basic Auth
