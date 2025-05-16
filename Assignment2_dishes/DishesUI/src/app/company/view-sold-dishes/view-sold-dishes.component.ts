@@ -29,6 +29,6 @@ export class ViewSoldDishesComponent implements OnInit {
   }
 
   viewDishDetails(dishId: number): void {
-    this.router.navigate(['/dish-detail', dishId]);
+    this.router.navigate(['/sold-dish-detail', dishId]);
   }
 }

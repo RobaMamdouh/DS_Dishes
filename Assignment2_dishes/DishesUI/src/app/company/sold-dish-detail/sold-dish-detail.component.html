@@ -1,0 +1,24 @@
+<div class="container">
+  <h2>Dish Details</h2>
+  <div *ngIf="dishDetail && buyers.length > 0; else errorTemplate">
+    <p><strong>Dish Name:</strong> {{ dishDetail.name }}</p>
+    <h3>Buyers</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Buyer Username</th>
+          <th>Quantity Bought</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let buyer of buyers">
+          <td>{{ buyer.username }}</td>
+          <td>{{ buyer.quantity }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <ng-template #errorTemplate>
+    <p class="error-message">{{ errorMessage || 'Unable to load dish details.' }}</p>
+  </ng-template>
+</div>

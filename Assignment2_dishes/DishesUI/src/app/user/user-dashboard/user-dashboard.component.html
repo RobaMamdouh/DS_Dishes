@@ -3,11 +3,13 @@
         <h1>Welcome {{getUsername()}} </h1>
         <br>
         <h2> to User Dashboard</h2>
+        <br>
+        <h3>Account Balance: {{getBalance()}}</h3>
         <br><br>
         <div class="button-row">
-            <a routerLink="/create-company-account">Create seller Account</a>
-            <a routerLink="/view-users">View Users</a>
-            <a routerLink="/view-companies">View Sellers</a>
+            <a routerLink="/create-order">Available dishes</a>
+            <a routerLink="/shopping-cart"> Shopping Cart</a>
+            <a routerLink="/order-list"> View Orders</a>
         </div>
         <br> <br> <br>
         <a routerLink="/landingpage">Logout</a>

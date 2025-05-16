@@ -18,6 +18,7 @@ export class AuthService {
  private userId: number | null = null;
   private userType: string | null = null;
   private username: string | null = null;
+  private balance: number | null = null;
 
   private readonly API_BASE = 'http://localhost:8082/api/users'; 
 
@@ -80,6 +81,23 @@ login(credentials: any): Observable<any> {
   getUserType(): string | null {
     return this.userType || localStorage.getItem('userType');
   }
+
+  getUserBalance(): Observable<any> {
+    const username = this.username || localStorage.getItem('username');
+    if (!username) {
+      throw new Error('Username not found');
+    }
+    return this.http.get<any>(`${this.API_BASE}/getUserByUsername`, {
+      params: new HttpParams().set('username', username)
+    }).pipe(
+      tap(user => {
+        if (user && user.balance !== undefined) {
+          this.balance = user.balance;
+        }
+      })
+    );
+  }
+
 
 
 }

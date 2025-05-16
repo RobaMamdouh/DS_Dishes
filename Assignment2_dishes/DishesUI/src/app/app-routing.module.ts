@@ -13,7 +13,12 @@ import { UpdateDishComponent } from './company/update-dish/update-dish.component
 import { AddDishComponent } from './company/add-dish/add-dish.component';
 import { ViewSoldDishesComponent } from './company/view-sold-dishes/view-sold-dishes.component';
 import { ViewDishesComponent } from './company/view-dishes/view-dishes.component';
-import { DishDetailComponent } from './company/dish-detail/dish-detail.component';
+import { SoldDishDetailComponent } from './company/sold-dish-detail/sold-dish-detail.component';
+import { CreateOrderComponent } from './user/create-order/create-order.component';
+import { OrderListComponent } from './user/order-list/order-list.component';
+import { ShoppingCartComponent } from './user/shopping-cart/shopping-cart.component';
+import { OrderDetailComponent } from './user/order-detail/order-detail.component';
+import { DishDetailComponent } from './user/dish-detail/dish-detail.component';
 
 
 
@@ -31,6 +36,11 @@ const routes: Routes = [
   { path: 'add-dish', component: AddDishComponent },
   { path: 'view-sold-dishes', component: ViewSoldDishesComponent },
   { path: 'view-dishes', component: ViewDishesComponent },
+  { path: 'sold-dish-detail/:id', component: SoldDishDetailComponent },
+  { path: 'create-order', component: CreateOrderComponent },
+  { path: 'order-list', component: OrderListComponent },
+  { path: 'shopping-cart', component: ShoppingCartComponent },
+  { path: 'order-detail/:id', component: OrderDetailComponent },
   { path: 'dish-detail/:id', component: DishDetailComponent },
   { path: '', redirectTo: '/landingpage', pathMatch: 'full' },
 ];
