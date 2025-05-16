@@ -141,10 +141,10 @@ public class userController {
         return userService.getAllCompanies();
     }
 
-         @GetMapping("/getUsernameById")
-     public String getUsernameById(@RequestParam long userId) {
-         return userService.getUsernameById(userId);
-     }
+    @GetMapping("/getUsernameById")
+    public String getUsernameById(@RequestParam long userId) {
+        return userService.getUsernameById(userId);
+    }
 
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/getUserByUsername")
@@ -159,6 +159,27 @@ public class userController {
             return ResponseEntity.badRequest().body("Insufficient balance.");
         }
         return ResponseEntity.ok("Balance reduced successfully.");
+    }
+
+    @GetMapping("/getBalance")
+    public ResponseEntity<?> getBalance(@RequestParam long userId) {
+        try {
+            double balance = userService.getBalance(userId);
+            return ResponseEntity.ok(balance);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
+    }
+
+
+    @GetMapping("/messages/payment-failed")
+    public List<String> getPaymentFailedMessages() {
+        return userService.getPaymentFailedMessages();
+    }
+
+    @GetMapping("/messages/error-logs")
+    public List<String> getErrorLogMessages() {
+        return userService.getErrorLogMessages();
     }
 
 }

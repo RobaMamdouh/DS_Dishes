@@ -74,9 +74,4 @@ public class orderController {
                 .collect(Collectors.joining("\n"));
     }
 
-
-    @GetMapping("/sold-dishes")
-    public List<SoldDishInfo> getSoldDishesWithUsernames() {
-        return orderService.getSoldDishesWithUsernames();
-    }
 }
