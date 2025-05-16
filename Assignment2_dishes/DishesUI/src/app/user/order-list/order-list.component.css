@@ -1,21 +1,76 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  flex-direction: column;
+}
 
-.order-table tr {
-  cursor: pointer;
+.container {
+  background-color: aliceblue;
+  width: 80%;
+  padding: 50px;
+  border: 1px solid black;
+  box-shadow: 0 0 10px;
+  margin: 120px auto;
+}
+
+h1 {
+  text-align: center;
 }
 
 .order-table {
   width: 100%;
+  border: 3px solid black;
   border-collapse: collapse;
-}
-.order-table th, .order-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
-}
-.order-table th {
-  background-color: #f2f2f2;
+  margin-bottom: 20px;
 }
 
+.order-table th,
+.order-table td {
+  padding: 15px;
+  text-align: center;
+  border: 1px solid black;
+}
+
+.order-table th {
+  background-color: #7e8089;
+}
+
+.success-message {
+  color: #28a745;
+  font-size: 16px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.error-message,
 .error {
-  color: red;
-  margin-bottom: 1em;
+  color: #dc3545;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 5px;
+  padding: 5px;
+}
+
+.back {
+  margin-top: 25px;
+  display: flex;
+  justify-content: center;
+}
+
+.back a {
+  font-size: 18px;
+  padding: 12px 24px;
+  background-color: #0c2b45;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.back a:hover {
+  background-color: #174c74;
 }

@@ -1,0 +1,76 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  flex-direction: column;
+}
+
+.container {
+    background-color: aliceblue;
+  width: 80%;
+  padding: 50px;
+  border: 1px solid black;
+  box-shadow: 0 0 10px;
+  margin: 120px auto;
+}
+
+h1 {
+  text-align: center;
+}
+
+table {
+  width: 100%;
+  border: 3px solid black;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+thead {
+  background-color: #7e8089;
+}
+
+th,
+td {
+  padding: 15px;
+  text-align: center;
+  border: 1px solid black;
+
+}
+
+.success-message {
+  color: #28a745;
+  font-size: 16px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 5px;
+  padding: 5px;
+}
+
+.back {
+   margin-top: 25px;
+  display: flex;
+  justify-content: center;
+}
+
+.back a {
+  font-size: 18px;
+  padding: 12px 24px;
+  background-color: #0c2b45;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.back a:hover {
+  background-color: #174c74;
+}

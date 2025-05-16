@@ -1,5 +1,6 @@
-<div class="payment-container">
-  <h2>Payment Failures</h2>
+<div class="container">
+  <h1>Payment Failures</h1>
+
   <table *ngIf="failures && failures.length > 0; else noFailures">
     <thead>
       <tr>
@@ -14,7 +15,12 @@
       </tr>
     </tbody>
   </table>
+
   <ng-template #noFailures>
-    <p>No payment failures found.</p>
+    <p class="error-message">No payment failures found.</p>
   </ng-template>
+
+  <div class="back">
+    <a routerLink="/home">Back to Home</a>
+  </div>
 </div>
